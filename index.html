@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Widget Minimalista</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #2a2a2a;
+    }
+
+    .widget-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr); /* Dos columnas */
+      gap: 12px; /* Espaciado entre botones */
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 15px;
+      padding: 15px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .widget-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      text-align: center;
+      color: white;
+      cursor: pointer;
+      transition: transform 0.2s, background-color 0.3s;
+      font-size: 14px; /* Tamaño de letra */
+      height: 70px;
+      width: 180px; /* Largo ajustado */
+    }
+
+    .widget-button:hover {
+      transform: scale(1.05);
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .widget-button i {
+      font-size: 20px; /* Tamaño de ícono */
+      color: #f5f5f5; /* Color blanco/gris minimalista */
+      margin-right: 8px;
+    }
+
+    .personal { background-color: rgba(138, 177, 144, 0.8); }
+    .brainstorming { background-color: rgba(243, 112, 85, 0.8); }
+    .project-planning { background-color: rgba(118, 89, 198, 0.8); }
+    .organizing { background-color: rgba(255, 166, 43, 0.8); }
+
+    .card-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .card-container.active {
+      display: flex;
+    }
+
+    .card {
+      width: 80%;
+      max-width: 400px;
+      background-color: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card-header {
+      font-size: 20px;
+      text-align: center;
+    }
+
+    .card-content textarea {
+      width: 100%;
+      height: 200px;
+      resize: none;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    .close-btn {
+      align-self: flex-end;
+      background-color: #d9534f;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+
+    .close-btn:hover {
+      background-color: #c9302c;
+    }
+  </style>
+</head>
+<body>
+  <div class="widget-container">
+    <div class="widget-button personal" data-card="personal">
+      <i class="fas fa-user"></i>
+      <span>Personal</span>
+    </div>
+    <div class="widget-button brainstorming" data-card="brainstorming">
+      <i class="fas fa-lightbulb"></i>
+      <span>Brainstorming</span>
+    </div>
+    <div class="widget-button project-planning" data-card="project-planning">
+      <i class="fas fa-clipboard-list"></i>
+      <span>Project Planning</span>
+    </div>
+    <div class="widget-button organizing" data-card="organizing">
+      <i class="fas fa-calendar-alt"></i>
+      <span>Organizing</span>
+    </div>
+  </div>
+
+  <!-- Contenedores de tarjetas -->
+  <div id="personal" class="card-container">
+    <div class="card">
+      <button class="close-btn" onclick="closeCard()">Close</button>
+      <div class="card-header">Personal Notes</div>
+      <div class="card-content">
+        <textarea placeholder="Write your personal notes here..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div id="brainstorming" class="card-container">
+    <div class="card">
+      <button class="close-btn" onclick="closeCard()">Close</button>
+      <div class="card-header">Brainstorming Notes</div>
+      <div class="card-content">
+        <textarea placeholder="Write your brainstorming ideas here..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div id="project-planning" class="card-container">
+    <div class="card">
+      <button class="close-btn" onclick="closeCard()">Close</button>
+      <div class="card-header">Project Planning Notes</div>
+      <div class="card-content">
+        <textarea placeholder="Write your project planning here..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div id="organizing" class="card-container">
+    <div class="card">
+      <button class="close-btn" onclick="closeCard()">Close</button>
+      <div class="card-header">Organizing Notes</div>
+      <div class="card-content">
+        <textarea placeholder="Write your organizing tasks here..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const buttons = document.querySelectorAll('.widget-button');
+    const cards = document.querySelectorAll('.card-container');
+
+    buttons.forEach(button => {
+      button.addEventListener('click', () => {
+        const cardId = button.getAttribute('data-card');
+        openCard(cardId);
+      });
+    });
+
+    function openCard(cardId) {
+      closeCard();
+      document.getElementById(cardId).classList.add('active');
+    }
+
+    function closeCard() {
+      cards.forEach(card => card.classList.remove('active'));
+    }
+  </script>
+</body>
+</html>

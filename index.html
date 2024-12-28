@@ -256,7 +256,19 @@
       document.querySelector('.theme-toggle').innerHTML = `<i class="fas fa-${isLight ? 'sun' : 'moon'}"></i> ${isLight ? 'Light Mode' : 'Dark Mode'}`;
     }
 
-    // Restaurar tema desde localStorage
+    const textareas = document.querySelectorAll('textarea');
+
+    textareas.forEach(textarea => {
+      const id = textarea.id;
+      const savedContent = localStorage.getItem(id);
+      if (savedContent) {
+        textarea.value = savedContent;
+      }
+      textarea.addEventListener('input', () => {
+        localStorage.setItem(id, textarea.value);
+      });
+    });
+
     const savedTheme = localStorage.getItem('theme') || 'dark';
     document.documentElement.setAttribute('data-theme', savedTheme);
     updateToggleButton();
